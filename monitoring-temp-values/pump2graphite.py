@@ -6,7 +6,7 @@ import socket
 LOG_FIELD_DELIMITER = ';'
 CARBON_SERVER = '127.0.0.1'
 CARBON_PORT = 2003
-
+DO_TEMPERATURE_ROUNDING = False
 
 def readLog():
     f = file('log.csv', 'r')
@@ -28,11 +28,14 @@ def pump2graphite(logRecords):
     for rec in logRecords:
         (time, id, temp) = rec
         time = long(round(float(time)))
-        temp = long(round(float(temp)))
+        if (DO_TEMPERATURE_ROUNDING):
+            temp = long(round(float(temp)))
+        else:
+            temp = float(temp)
         message = str('timecapsule.temperature.sensor.id%s %s %s\n' % (id, temp, time))
-        print message
-        print conn.send(message)
+        conn.send(message)
     conn.close()
+    print "Done."
 
 
 if __name__ == "__main__":
