@@ -1,5 +1,15 @@
 
-# Using Graphite
+# Recording temperature values (a.k.a. monitoring)
+
+Connect Arduino to your PC and adjust the device name in ```monitor-tty.py```.
+
+````
+python monitor-tty.py > log.csv
+````
+
+# Visualisation
+
+## Using Graphite
 
 https://hub.docker.com/r/hopsoft/graphite-statsd/
 
@@ -11,7 +21,7 @@ docker run -d --name graphite --restart=always -p 80:80 -p 2003:2003 -p 8125:812
 ````
 
 
-# Using Grafana
+## Using Grafana
 
 https://hub.docker.com/r/grafana/grafana/
 
