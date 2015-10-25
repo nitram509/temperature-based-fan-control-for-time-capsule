@@ -1,11 +1,13 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-import serial
 import re
 import time
 
+import serial
+
 TTY_NAME = '/dev/ttyUSB0'
+LOG_FIELD_DELIMITER = ';'
 
 
 class TemperatureMonitorTtyReader:
@@ -17,7 +19,6 @@ class TemperatureMonitorTtyReader:
         self.ser.open()
         self.ser.flushInput()
         self.ser.flushOutput()
-
 
     def __iter__(self):
         return self
@@ -41,7 +42,7 @@ class TemperatureMonitorTtyReader:
 
 
 def log(time, id, temp):
-    info = "%s;%d;%s" % (time, id, temp)
+    info = ("%s" + LOG_FIELD_DELIMITER + "%d" + LOG_FIELD_DELIMITER + "%s") % (time, id, temp)
     info = info.replace('.', ',')
     print info
 
@@ -57,5 +58,3 @@ if __name__ == "__main__":
             log(timestamp, id, temp)
         else:
             timestamp = time.time()
-            
-            
