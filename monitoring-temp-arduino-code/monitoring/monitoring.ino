@@ -17,7 +17,7 @@ int FAN_PWM_PIN = 9;
 
 /***************************************************************/
 
-#define RING_BUFFER_SIZE 10
+#define RING_BUFFER_SIZE 30
 #define INVALID_VALUE -273.0
 #define AVERAGE_INTERVAL_IN_MILLIS 60000 // e.g. one minute = 60000
 
