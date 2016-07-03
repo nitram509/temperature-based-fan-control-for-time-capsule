@@ -57,6 +57,23 @@ float averageValues(TemperatureRingBuffer *tempRingBuf) {
     return avg / (float)counter;
 }
 
+void sendValuesToHost() {
+    unsigned long currentMillis = millis();
+    if ((currentMillis - lastSend) > SEND_TO_HOST_INTERVALL_IN_MILLIS) {
+        lastSend = currentMillis;
+
+        Serial.print("(1) ");
+        Serial.print(averageValues(&tempRingBuf_1), 1);
+        Serial.println("Grad Celsius");
+
+        Serial.print("(2) ");
+        Serial.print(averageValues(&tempRingBuf_2), 1);
+        Serial.println("Grad Celsius");
+
+        Serial.println("");
+    }
+}
+
 void setup() {
     if (SEND_TEMP_VALUES_TO_HOST) {
         Serial.begin(9600);
@@ -69,24 +86,12 @@ void setup() {
 }
 
 void loop() {
-
     buffer_write(&tempRingBuf_1, readTemperatureInCelcius(LM35_1_PIN));
     buffer_write(&tempRingBuf_2, readTemperatureInCelcius(LM35_2_PIN));
     delay(WAIT_MILLIS);
 
-    unsigned long currentMillis = millis();
-    if (SEND_TEMP_VALUES_TO_HOST && (currentMillis - lastSend) > SEND_TO_HOST_INTERVALL_IN_MILLIS) {
-        lastSend = currentMillis;
-
-        Serial.print("(1) ");
-        Serial.print(averageValues(&tempRingBuf_1), 1);
-        Serial.println("Grad Celsius");
-
-        Serial.print("(2) ");
-        Serial.print(averageValues(&tempRingBuf_2), 1);
-        Serial.println("Grad Celsius");
-
-        Serial.println("");
+    if (SEND_TEMP_VALUES_TO_HOST) {
+        sendValuesToHost();
     }
 
     analogWrite(FAN_PWM_PIN, 255);
