@@ -10,15 +10,16 @@ int FAN_PWM_PIN = 9;
 
 // only needed when measuring temperature time series values
 #define SEND_TEMP_VALUES_TO_HOST true
-#define SEND_TO_HOST_INTERVALL_IN_MILLIS 1000
+#define SEND_TO_HOST_INTERVALL_IN_MILLIS 6000
 
 #define SENSOR_1_TEMP_THRESHOLD_in_CELCIUS 40.0
+#define SENSOR_2_TEMP_THRESHOLD_in_CELCIUS 37.0
 
 /***************************************************************/
 
 #define RING_BUFFER_SIZE 10
 #define INVALID_VALUE -273.0
-#define AVERAGE_INTERVAL_IN_MILLIS 60*1000 // e.g. one minute = 60*1000
+#define AVERAGE_INTERVAL_IN_MILLIS 60000 // e.g. one minute = 60000
 
 /***************************************************************/
 
@@ -29,7 +30,8 @@ struct TemperatureRingBuffer {
 
 TemperatureRingBuffer tempRingBuf_1;
 TemperatureRingBuffer tempRingBuf_2;
-unsigned long lastSend = 0;
+unsigned long lastSendMillis = 0;
+unsigned long lastRecordedMillis = 0;
 
 /**************************************************************/
 
@@ -62,19 +64,41 @@ float averageValues(TemperatureRingBuffer *tempRingBuf) {
 
 void sendValuesToHost() {
     unsigned long currentMillis = millis();
-    if ((currentMillis - lastSend) > SEND_TO_HOST_INTERVALL_IN_MILLIS) {
-        lastSend = currentMillis;
+    bool isIntervalPassed = (currentMillis - lastSendMillis) > (unsigned long)SEND_TO_HOST_INTERVALL_IN_MILLIS;
+    if ((unsigned long)0 == lastSendMillis || isIntervalPassed) {
+        lastSendMillis = currentMillis;
 
-        Serial.print("(1) ");
+        Serial.print("Sensor (1) ");
         Serial.print(averageValues(&tempRingBuf_1), 1);
-        Serial.println("Grad Celsius");
+        Serial.println(" Grad Celsius");
 
-        Serial.print("(2) ");
+        Serial.print("Sensor (2) ");
         Serial.print(averageValues(&tempRingBuf_2), 1);
-        Serial.println("Grad Celsius");
+        Serial.println(" Grad Celsius");
 
         Serial.println("");
     }
+}
+
+void adjustFanSpeed() {
+    float lastIntervalTempAverage_1 = averageValues(&tempRingBuf_1);
+    float lastIntervalTempAverage_2 = averageValues(&tempRingBuf_2);
+    if (lastIntervalTempAverage_1 > SENSOR_1_TEMP_THRESHOLD_in_CELCIUS
+       || lastIntervalTempAverage_2 > SENSOR_2_TEMP_THRESHOLD_in_CELCIUS) {
+        analogWrite(FAN_PWM_PIN, 255);
+    } else {
+        analogWrite(FAN_PWM_PIN, 0);
+    }
+}
+
+void recordSensorMeasurements() {
+    unsigned long currentMillis = millis();
+    bool isIntervalPassed = (currentMillis - lastRecordedMillis) > ((unsigned long)AVERAGE_INTERVAL_IN_MILLIS / (unsigned long)RING_BUFFER_SIZE);
+    if ((unsigned long)0 == lastRecordedMillis || isIntervalPassed) {
+        lastRecordedMillis = currentMillis;
+        buffer_write(&tempRingBuf_1, readTemperatureInCelcius(LM35_1_PIN));
+        buffer_write(&tempRingBuf_2, readTemperatureInCelcius(LM35_2_PIN));
+     }
 }
 
 void setup() {
@@ -89,17 +113,8 @@ void setup() {
 }
 
 void loop() {
-    buffer_write(&tempRingBuf_1, readTemperatureInCelcius(LM35_1_PIN));
-    buffer_write(&tempRingBuf_2, readTemperatureInCelcius(LM35_2_PIN));
-    delay(AVERAGE_INTERVAL_IN_MILLIS / RING_BUFFER_SIZE); // e.g. one minute = 60*1000
-
-    float lastIntervalTempAverage = averageValues(&tempRingBuf_1);
-    if (lastIntervalTempAverage > SENSOR_1_TEMP_THRESHOLD_in_CELCIUS) {
-        analogWrite(FAN_PWM_PIN, 255);
-    } else {
-        analogWrite(FAN_PWM_PIN, 0);
-    }
-
+    recordSensorMeasurements();
+    adjustFanSpeed();
     if (SEND_TEMP_VALUES_TO_HOST) {
         sendValuesToHost();
     }
