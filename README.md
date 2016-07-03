@@ -43,10 +43,11 @@ My bottom line: For the XM1 speed controll, I just use on/off semantics and no i
 ### Record temperature time series and visualize it
 
 To adjust your own setup, I recommend to record a time series and figure out your own thresholds.
-See [howto-docker.md](howto-timeseries.md) for details how to record and visualize such time series.
+See [howto-timeseries.md](howto-timeseries.md) for details how to record and visualize such time series.
 
 ![example temperature](temperature-graph.png?raw=true)
-
+This time series shows how temperature changes over time.
+Circa 17:00 the backup was started, so the temperature increased.
 
 ##### License
 
