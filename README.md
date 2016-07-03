@@ -9,7 +9,7 @@ See also Google's study [Failure Trends in a Large Disk Drive Population](http:/
 ### Bill Of Material
 
 * 1x Arduino Nano (Atmege 328P, 16MHz)
-* 2x Temperature Sensor LM35, To-92 package e.g. [LM35DZ]((http://www.ebay.com/sch/i.html?_nkw=XL6009)) (0°C..100°C)
+* 2x Temperature Sensor LM35, To-92 package e.g. [LM35DZ](http://www.ebay.com/sch/i.html?_nkw=XL6009) (0°C..100°C)
    * used together with a R-C Damper, see [manual's Figure 4](http://www.watterott.com/download/LM35.pdf)
 * 1x Mosfet (which works at logic level), e.g. IRLR/U120NPbF (LU120N, MOSFET N-LogL TO-251AA 100V 10A)
 * 2x Resistor: 75 Ohm
