@@ -18,7 +18,7 @@ int FAN_PWM_PIN = 9;
 
 #define RING_BUFFER_SIZE 10
 #define INVALID_VALUE -273.0
-#define ONE_MINUTE_IN_MILLIS 1000
+#define AVERAGE_INTERVAL_IN_MILLIS 60*1000 // e.g. one minute = 60*1000
 
 /***************************************************************/
 
@@ -91,10 +91,10 @@ void setup() {
 void loop() {
     buffer_write(&tempRingBuf_1, readTemperatureInCelcius(LM35_1_PIN));
     buffer_write(&tempRingBuf_2, readTemperatureInCelcius(LM35_2_PIN));
-    delay(ONE_MINUTE_IN_MILLIS / RING_BUFFER_SIZE);
+    delay(AVERAGE_INTERVAL_IN_MILLIS / RING_BUFFER_SIZE); // e.g. one minute = 60*1000
 
-    float lastMinuteTempAverage = averageValues(&tempRingBuf_1);
-    if (lastMinuteTempAverage > SENSOR_1_TEMP_THRESHOLD_in_CELCIUS) {
+    float lastIntervalTempAverage = averageValues(&tempRingBuf_1);
+    if (lastIntervalTempAverage > SENSOR_1_TEMP_THRESHOLD_in_CELCIUS) {
         analogWrite(FAN_PWM_PIN, 255);
     } else {
         analogWrite(FAN_PWM_PIN, 0);
