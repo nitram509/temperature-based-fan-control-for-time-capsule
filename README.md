@@ -1,6 +1,6 @@
 # Temperature Based Fan Control For Time Capsule
 
-An Arduino based controller board to automatically adjust
+An Arduino based controller board (powered just via USB) to automatically adjust
 a fan to cool down an Apple Time Capsule.
 Because: There is hope, that a cooled hard drive lives longer ;-)
 
