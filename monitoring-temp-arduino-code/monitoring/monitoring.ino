@@ -9,14 +9,16 @@ int LM35_2_PIN = A1;
 int FAN_PWM_PIN = 9;
 
 // only needed when measuring temperature time series values
-#define SEND_TEMP_VALUES_TO_HOST false
+#define SEND_TEMP_VALUES_TO_HOST true
 #define SEND_TO_HOST_INTERVALL_IN_MILLIS 1000
+
+#define SENSOR_1_TEMP_THRESHOLD_in_CELCIUS 40.0
 
 /***************************************************************/
 
-#define RING_BUFFER_SIZE 5
+#define RING_BUFFER_SIZE 10
 #define INVALID_VALUE -273.0
-#define WAIT_MILLIS (SEND_TO_HOST_INTERVALL_IN_MILLIS / RING_BUFFER_SIZE)
+#define ONE_MINUTE_IN_MILLIS 1000
 
 /***************************************************************/
 
@@ -89,11 +91,16 @@ void setup() {
 void loop() {
     buffer_write(&tempRingBuf_1, readTemperatureInCelcius(LM35_1_PIN));
     buffer_write(&tempRingBuf_2, readTemperatureInCelcius(LM35_2_PIN));
-    delay(WAIT_MILLIS);
+    delay(ONE_MINUTE_IN_MILLIS / RING_BUFFER_SIZE);
+
+    float lastMinuteTempAverage = averageValues(&tempRingBuf_1);
+    if (lastMinuteTempAverage > SENSOR_1_TEMP_THRESHOLD_in_CELCIUS) {
+        analogWrite(FAN_PWM_PIN, 255);
+    } else {
+        analogWrite(FAN_PWM_PIN, 0);
+    }
 
     if (SEND_TEMP_VALUES_TO_HOST) {
         sendValuesToHost();
     }
-
-    analogWrite(FAN_PWM_PIN, 255);
 }
