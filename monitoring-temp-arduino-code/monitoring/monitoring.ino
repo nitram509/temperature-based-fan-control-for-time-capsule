@@ -12,7 +12,7 @@ int FAN_PWM_PIN = 9;
 #define SEND_TEMP_VALUES_TO_HOST true
 #define SEND_TO_HOST_INTERVALL_IN_MILLIS 6000
 
-#define SENSOR_1_TEMP_THRESHOLD_in_CELCIUS 40.0
+#define SENSOR_1_TEMP_THRESHOLD_in_CELCIUS 41.0
 #define SENSOR_2_TEMP_THRESHOLD_in_CELCIUS 37.0
 
 /***************************************************************/
