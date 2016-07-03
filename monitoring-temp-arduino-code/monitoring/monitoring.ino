@@ -8,7 +8,8 @@ int LM35_1_PIN = A0;
 int LM35_2_PIN = A1;
 int FAN_PWM_PIN = 9;
 
-#define SEND_TEMP_VALUES_TO_HOST true
+// only needed when measuring temperature time series values
+#define SEND_TEMP_VALUES_TO_HOST false
 #define SEND_TO_HOST_INTERVALL_IN_MILLIS 1000
 
 /***************************************************************/
@@ -46,15 +47,15 @@ void initRingBuffer(TemperatureRingBuffer *tempRingBuf) {
 }
 
 float averageValues(TemperatureRingBuffer *tempRingBuf) {
-    float avg = 0.0;
-    int counter = 0;
+    float sum = 0.0;
+    int numberOfValidValues = 0;
     for (int i=0; i<RING_BUFFER_SIZE; i++) {
         if (tempRingBuf->values[i] != INVALID_VALUE) {
-            counter ++;
-            avg += tempRingBuf->values[i];
+            numberOfValidValues ++;
+            sum += tempRingBuf->values[i];
         }
     }
-    return avg / (float)counter;
+    return sum / (float)numberOfValidValues;
 }
 
 void sendValuesToHost() {
