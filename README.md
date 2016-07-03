@@ -14,6 +14,7 @@ See also Google's study [Failure Trends in a Large Disk Drive Population](http:/
 
 ![PCB and Time Capsule](20151025_235245.jpg?raw=true)
 
+
 ##### License
 
 [The MIT License (MIT)](https://opensource.org/licenses/MIT)
