@@ -40,6 +40,14 @@ My bottom line: For the XM1 speed controll, I just use on/off semantics and no i
 ![PCB and Time Capsule](20151025_235245.jpg?raw=true)
 
 
+### Record temperature time series and visualize it
+
+To adjust your own setup, I recommend to record a time series and figure out your own thresholds.
+See ![howto-docker.md](howto-docker.md) for details how to record and visualize such time series.
+
+![example temperature](temperature-graph.png?raw=true)
+
+
 ##### License
 
 [The MIT License (MIT)](https://opensource.org/licenses/MIT)
