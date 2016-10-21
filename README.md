@@ -6,6 +6,11 @@ Because: There is hope, that a cooled hard drive lives longer ;-)
 
 See also Google's study [Failure Trends in a Large Disk Drive Population](http://static.googleusercontent.com/media/research.google.com/en/archive/disk_failures.pdf)
 
+##### Community Links
+
+[Hackaday project site](https://hackaday.io/project/16555-temperature-based-fan-control)
+
+
 ### Bill Of Material
 
 * 1x Arduino Nano (Atmege 328P, 16MHz)
